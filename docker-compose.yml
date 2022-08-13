@@ -1,0 +1,28 @@
+version: '3.3'
+services:
+  reverse-proxy:
+    image: nginx:1.17.10
+    container_name: proxyit_harder
+    depends_on:
+      - frontend
+      - loginapi
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+
+  frontend:
+    restart: always
+    container_name: angular-docker-container
+    build: ./tryitHarder
+    ports:
+      - '9000:80'
+    depends_on:
+      - loginapi
+  
+  loginapi:
+    restart: always
+    container_name: tryit_login
+    build: ./TryLogin
+    ports:
+      - '9001:8080'
